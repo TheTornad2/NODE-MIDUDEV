@@ -12,13 +12,15 @@ app.get('/movies', (req, res) => {
 
   if (genre) {
     const filteredMovies = movies.filter((movie) =>
-      movie.genre.some((g) => g.toLowerCase === genre.toLowerCase())
+      movie.genre.some((g) => g.toLowerCase() === genre.toLowerCase())
     );
     return res.json(filteredMovies);
   }
 
   res.json(movies);
 });
+
+//Filtrar por ID
 
 app.get('/movies/:id', (req, res) => {
   const { id } = req.params;
@@ -28,8 +30,10 @@ app.get('/movies/:id', (req, res) => {
   res.status(404).json({ message: 'movie not found' });
 });
 
+//Crear película
+
 app.post('/movies', (req, res) => {
-  const { title, year, director, duration, poster, genre } = req.body;
+  const { title, year, director, duration, poster, genre, rate } = req.body;
 
   const newMovie = {
     id: crypto.randomUUID(),
@@ -38,8 +42,11 @@ app.post('/movies', (req, res) => {
     director,
     duration,
     poster,
+    rate: rate ?? 0,
     genre,
   };
+
+  //Esto no sería REST, porque estamos guardando el estado de la aplicación en memoria.
 
   movies.push(newMovie);
   res.status(201).json(newMovie);
